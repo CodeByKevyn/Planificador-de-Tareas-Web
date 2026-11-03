@@ -1,11 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./css/styles.css">
+  <title>Focusly</title>
 </head>
 <body>
+
+  <!-- Navegador (fuera del contenedor si quieres que ocupe el 100% del ancho) -->
+  <nav class="nav-bar">
+    <ul class="listas-nav">
+      <li><a href="#">LOGO</a></li>
+      <li><a href="#">Resumen</a></li>
+      <li><a href="#">Mis tareas</a></li>
+      <li><a href="#">Calendario</a></li>
+      <li><a href="#">Estadísticas</a></li>
+    </ul>
+  </nav>
+
+  <!-- CONTENEDOR PRINCIPAL: Centra todo el contenido de la página -->
+  <main class="contenedor">
     
+    <!-- ENCABEZADO DE LA SECCIÓN -->
+    <header class="encabezado-seccion">
+      <div class="encabezado-texto">
+        <span class="fecha">MARTES, 3 DE NOVIEMBRE</span>
+        <h1>Plan de hoy</h1>
+        <p class="descripcion">Una vista clara de lo que necesita tu atención.</p>
+      </div>
+      <div class="encabezado-conteo">
+        <p><strong>5 tareas</strong> pendientes</p>
+      </div>
+    </header>
+
+    <!-- CUADRO / TARJETA DE PROGRESO -->
+    <article class="tarjeta-progreso">
+      
+      <!-- Bloque 1: Encabezado del cuadro (Título a la izq, Círculo 0% a la der) -->
+      <div class="tarjeta-cabecera">
+        <div class="tarjeta-titulos">
+          <span class="subtitulo">PROGRESO GENERAL</span>
+          <h2>Sigue avanzando</h2>
+        </div>
+        <div class="circulo-porcentaje">
+          <span>0%</span>
+        </div>
+      </div>
+
+      <!-- Bloque 2: Las 3 columnas de números -->
+      <div class="tarjeta-estadisticas">
+        <div class="item-stat">
+          <span class="numero">0</span>
+          <span class="etiqueta">Completadas</span>
+        </div>
+        <div class="item-stat">
+          <span class="numero">5</span>
+          <span class="etiqueta">Pendientes</span>
+        </div>
+        <div class="item-stat">
+          <span class="numero">5</span>
+          <span class="etiqueta">Total</span>
+        </div>
+      </div>
+
+      <!-- Bloque 3: Barra de progreso -->
+      <div class="tarjeta-barra-contenedor">
+        <div class="barra-labels">
+          <span>Progreso</span>
+          <span>0 de 5</span>
+        </div>
+        <!-- Pista del fondo de la barra -->
+        <div class="barra-fondo">
+          <!-- Relleno que avanzará dinámicamente -->
+          <div class="barra-relleno"></div>
+        </div>
+      </div>
+
+    </article>
+
+  </main>
+
 </body>
 </html>
