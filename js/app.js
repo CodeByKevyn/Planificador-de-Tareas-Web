@@ -1,89 +1,139 @@
-// Array para guardar la lista de tareas en memoria
+// Arreglo global de tareas
 let tareas = [];
 let filtroActual = 'todas';
 
-// Captura de elementos del DOM
+// Referencias a elementos del DOM
 const modal = document.getElementById('modal-tarea');
 const btnAbrirModal = document.getElementById('btn-abrir-modal');
 const btnCerrarModal = document.getElementById('btn-cerrar-modal');
 const btnCancelar = document.getElementById('btn-cancelar');
 const formTarea = document.getElementById('formulario-tarea');
+const alertError = document.getElementById('alert-error');
 const listaTareas = document.getElementById('lista-tareas');
 const inputBuscador = document.getElementById('input-buscador');
 const botonesFiltro = document.querySelectorAll('.btn-filtro');
 
-// ABRIR Y CERRAR MODAL
+
+//  FUNCIÓN DE VALIDACIÓN 
+
+function validFormFieldInput(data) {
+  // Comprobar los datos por consola
+  console.log("name: " + data.name);
+  console.log("description: " + data.description);
+  console.log("dueDate: " + data.dueDate);
+  console.log("status: " + data.status);
+
+  // Nombre no vacío
+  if (!data.name || data.name.trim() === '') {
+    return false;
+  }
+
+  // Descripción no vacía
+  if (!data.description || data.description.trim() === '') {
+    return false;
+  }
+
+  //  Fecha de entrega presente
+  if (!data.dueDate || data.dueDate.trim() === '') {
+    return false;
+  }
+
+  // Estado seleccionado
+  if (!data.status || data.status.trim() === '') {
+    return false;
+  }
+
+  return true;
+}
+
+
+// CONTROL DEL MODAL Y EVENTOS DE FORMULARIO
+
+
 btnAbrirModal.addEventListener('click', function() {
   modal.classList.remove('oculto');
+  alertError.classList.add('d-none'); // Ocultar alerta previa al abrir
 });
 
-btnCerrarModal.addEventListener('click', function() {
+function cerrarModal() {
   modal.classList.add('oculto');
-});
+  formTarea.reset();
+  alertError.classList.add('d-none');
+}
 
-btnCancelar.addEventListener('click', function() {
-  modal.classList.add('oculto');
-});
+btnCerrarModal.addEventListener('click', cerrarModal);
+btnCancelar.addEventListener('click', cerrarModal);
 
-// AGREGAR NUEVA TAREA DESDE EL FORMULARIO
+// ENVIAR Y VALIDAR FORMULARIO
 formTarea.addEventListener('submit', function(evento) {
   evento.preventDefault();
 
-  const titulo = document.getElementById('titulo-tarea').value;
-  const categoria = document.getElementById('categoria-tarea').value;
-  const prioridad = document.getElementById('prioridad-tarea').value;
-  const fechaHora = document.getElementById('fecha-tarea').value;
+  // Capturar valores mediante selectors
+  const nameInput = document.querySelector('#newTaskNameInput').value;
+  const descriptionInput = document.querySelector('#newTaskDescriptionInput').value;
+  const dueDateInput = document.querySelector('#newTaskDueDateInput').value;
+  const statusInput = document.querySelector('#newTaskStatusInput').value;
 
-  // Formatear la fecha ingresada para que se vea bonita
-  let fechaFormateada = 'Sin fecha';
-  if (fechaHora) {
-    const fechaObj = new Date(fechaHora);
-    fechaFormateada = fechaObj.toLocaleString('es-ES', { 
-      day: 'numeric', 
-      month: 'short', 
-      hour: '2-digit', 
-      minute: '2-digit' 
-    });
+  // Empaquetar objeto de datos para la función de validación
+  const formData = {
+    name: nameInput,
+    description: descriptionInput,
+    dueDate: dueDateInput,
+    status: statusInput
+  };
+
+  // Ejecutar validación
+  const esValido = validFormFieldInput(formData);
+
+  if (!esValido) {
+    // Formulario inválido o incompleto -> Mostrar alerta
+    alertError.classList.remove('d-none');
+    return;
   }
 
-  // Objeto de la tarea
+  //  Formulario válido -> Ocultar alerta y procesar tarea
+  alertError.classList.add('d-none');
+
+  // Formatear fecha para la lista
+  const fechaObj = new Date(dueDateInput);
+  const fechaFormateada = fechaObj.toLocaleString('es-ES', { 
+    day: 'numeric', 
+    month: 'short', 
+    hour: '2-digit', 
+    minute: '2-digit' 
+  });
+
+  // Crear objeto tarea
   const nuevaTarea = {
     id: Date.now(),
-    titulo: titulo,
-    categoria: categoria,
-    prioridad: prioridad,
+    titulo: nameInput,
+    descripcion: descriptionInput,
+    prioridad: statusInput,
     fechaTexto: fechaFormateada,
     completada: false
   };
 
-  // Guardar en la lista y resetear interfaz
   tareas.push(nuevaTarea);
-  formTarea.reset();
-  modal.classList.add('oculto');
-
-  // Actualizar pantalla y contadores
+  cerrarModal();
   renderizarTareas();
 });
 
-// FUNCIONAMIENTO DE LOS FILTROS (Todas / Urgentes / Próximas)
+
+// FILTROS Y BÚSQUEDA
+
 botonesFiltro.forEach(function(boton) {
   boton.addEventListener('click', function() {
-    // Quitar la clase activo de todos los botones y ponérsela al clickeado
     botonesFiltro.forEach(function(b) { b.classList.remove('activo'); });
     boton.classList.add('activo');
-
-    // Cambiar filtro actual y redibujar
     filtroActual = boton.getAttribute('data-filtro');
     renderizarTareas();
   });
 });
 
-// BÚSQUEDA EN TIEMPO REAL
 inputBuscador.addEventListener('input', function() {
   renderizarTareas();
 });
 
-// MARCAR/DESMARCAR TAREA COMO COMPLETADA
 function alternarCompletada(idTarea) {
   for (let i = 0; i < tareas.length; i++) {
     if (tareas[i].id === idTarea) {
@@ -94,34 +144,28 @@ function alternarCompletada(idTarea) {
   renderizarTareas();
 }
 
-// ELIMINAR TAREA
 function eliminarTarea(idTarea) {
-  tareas = tareas.filter(function(t) {
-    return t.id !== idTarea;
-  });
+  tareas = tareas.filter(function(t) { return t.id !== idTarea; });
   renderizarTareas();
 }
 
-// RENDERIZAR TAREAS EN PANTALLA Y ACTUALIZAR ESTADÍSTICAS
+// -------------------------------------------------------------
+// RENDERIZAR TAREAS EN PANTALLA
+// -------------------------------------------------------------
 function renderizarTareas() {
   const busqueda = inputBuscador.value.toLowerCase();
 
-  // Filtrar según el botón presionado y el texto del buscador
   const tareasFiltradas = tareas.filter(function(tarea) {
     let coincideFiltro = true;
-    if (filtroActual === 'urgente') {
-      coincideFiltro = (tarea.prioridad === 'urgente');
-    } else if (filtroActual === 'proxima') {
-      coincideFiltro = (tarea.prioridad === 'proxima');
-    }
+    if (filtroActual === 'urgente') coincideFiltro = (tarea.prioridad === 'urgente');
+    if (filtroActual === 'proxima') coincideFiltro = (tarea.prioridad === 'proxima');
 
     let coincideBusqueda = tarea.titulo.toLowerCase().includes(busqueda) || 
-                             tarea.categoria.toLowerCase().includes(busqueda);
+                             tarea.descripcion.toLowerCase().includes(busqueda);
 
     return coincideFiltro && coincideBusqueda;
   });
 
-  // Mostrar mensaje de vacío o construir el HTML de la lista
   if (tareasFiltradas.length === 0) {
     listaTareas.innerHTML = '<p class="mensaje-vacio">No hay tareas para mostrar.</p>';
   } else {
@@ -129,7 +173,7 @@ function renderizarTareas() {
     tareasFiltradas.forEach(function(tarea) {
       const claseCompletada = tarea.completada ? 'completada' : '';
       const claseTachado = tarea.completada ? 'tachado' : '';
-      const textoPrioridad = tarea.prioridad.replace('-', ' ');
+      const textoEstado = tarea.prioridad.replace('-', ' ');
 
       contenidoHTML += `
         <div class="tarea-item ${claseCompletada}">
@@ -139,9 +183,9 @@ function renderizarTareas() {
           <div class="tarea-info">
             <div class="tarea-titulo-fila">
               <span class="tarea-titulo ${claseTachado}">${tarea.titulo}</span>
-              <span class="badge ${tarea.prioridad}">${textoPrioridad}</span>
+              <span class="badge ${tarea.prioridad}">${textoEstado}</span>
             </div>
-            <span class="tarea-categoria">${tarea.categoria}</span>
+            <span class="tarea-categoria">${tarea.descripcion}</span>
           </div>
           <div class="tarea-fecha-box">
             <span class="fecha-texto">${tarea.fechaTexto}</span>
@@ -154,25 +198,20 @@ function renderizarTareas() {
     listaTareas.innerHTML = contenidoHTML;
   }
 
-  // Actualizar contadores superiores y barra de progreso
   actualizarEstadisticas();
 }
 
-// 8. ACTUALIZAR ESTADÍSTICAS DEL PROGRESO GENERAL
 function actualizarEstadisticas() {
   const total = tareas.length;
   let completadas = 0;
 
   for (let i = 0; i < tareas.length; i++) {
-    if (tareas[i].completada) {
-      completadas++;
-    }
+    if (tareas[i].completada) completadas++;
   }
 
   const pendientes = total - completadas;
   const porcentaje = total === 0 ? 0 : Math.round((completadas / total) * 100);
 
-  // Inyectar en el DOM
   document.getElementById('stat-completadas').textContent = completadas;
   document.getElementById('stat-pendientes').textContent = pendientes;
   document.getElementById('stat-total').textContent = total;

@@ -440,3 +440,16 @@
 .btn-secundario:hover {
   background-color: #F8FAFC;
 }
+/* Ajustes adicionales para textarea y Bootstrap dentro del modal */
+.campo-form textarea {
+  padding: 10px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  resize: vertical;
+}
+
+.campo-form textarea:focus {
+  border-color: #0F172A;
+}
