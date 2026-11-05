@@ -14,7 +14,7 @@ Una aplicación web moderna e intuitiva para la gestión y planificación de tar
 | :--- | :--- |
 | 🎨 **Diseño en Figma** | [Ver Wireframe & UI en Figma](https://www.figma.com/design/hSpQJnKEF9LNRNS3zaSRVl/Planificador-de-Tareas-Web?node-id=0-1&t=OHQs8L8TYVl5BJAt-1) |
 | 📋 **Gestión en Trello** | [Ver Tablero de Sprints en Trello](https://trello.com/invite/b/6abd3a4efa53609caa771404/ATTIbb22409e99429d7c7bcc8b0f06ead3e1FF0CE23C/mi-tablero-de-trello) |
-| 🌐 **Sitio Web (Demo)** | [Ver Pagina] (https://codebykevyn.github.io/Planificador-de-Tareas-Web/)
+| 🌐 **Sitio Web (Demo)** | [Ver Pagina] (https://codebykevyn.github.io/Planificador-de-Tareas-Web/) |
 ---
 
 ## 💡 Lógica del Sistema Semáforo
