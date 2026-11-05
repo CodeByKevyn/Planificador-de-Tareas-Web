@@ -45,7 +45,7 @@
   padding: 0 20px;       /* Margen de seguridad para pantallas pequeñas */
 }
 
-/* 2. ENCABEZADO "PLAN DE HOY" (Flexbox en 2 columnas) */
+/* 2. ENCABEZADO "PLAN DE HOY"  */
 .encabezado-seccion {
   display: flex;
   justify-content: space-between; /* Texto a la izquierda, conteo a la derecha */
@@ -118,4 +118,325 @@
   height: 100%;
   border-radius: 10px;
   background-color: #000000;
+}
+
+/* =======================================
+   SECCIÓN DE AGENDA
+======================================= */
+
+.seccion-agenda {
+  margin-top: 40px;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+.agenda-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.subtitulo-agenda {
+  font-size: 12px;
+  font-weight: 700;
+  color: #8A92A6;
+  letter-spacing: 0.5px;
+}
+
+.agenda-titulos h2 {
+  font-size: 24px;
+  margin: 4px 0 0 0;
+  color: #0F172A;
+}
+
+.btn-anadir {
+  background-color: #0F172A;
+  color: #FFFFFF;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 20px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-anadir:hover {
+  background-color: #1E293B;
+}
+
+/* Buscador y Filtros */
+.agenda-barras {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.buscador {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icono-buscar {
+  font-size: 14px;
+  opacity: 0.5;
+}
+
+.buscador input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: #475569;
+}
+
+.filtros {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-filtro {
+  background: none;
+  border: none;
+  padding: 6px 14px;
+  font-size: 13px;
+  color: #64748B;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-filtro.activo {
+  background-color: #0F172A;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+/* Lista dinámica de tareas */
+.tarjeta-lista-tareas {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.02);
+  overflow: hidden;
+  min-height: 80px;
+}
+
+.mensaje-vacio {
+  text-align: center;
+  color: #94A3B8;
+  padding: 30px 16px;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Filas creadas dinámicamente */
+.tarea-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #F1F5F9;
+  gap: 16px;
+}
+
+.tarea-item:last-child {
+  border-bottom: none;
+}
+
+.tarea-item.completada {
+  opacity: 0.6;
+}
+
+.tarea-checkbox input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid #CBD5E1;
+  appearance: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.tarea-checkbox input[type="checkbox"]:checked {
+  background-color: #0F172A;
+  border-color: #0F172A;
+}
+
+.tarea-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.tarea-titulo-fila {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tarea-titulo {
+  font-weight: 700;
+  font-size: 15px;
+  color: #0F172A;
+}
+
+.tarea-titulo.tachado {
+  text-decoration: line-through;
+  color: #94A3B8;
+}
+
+.tarea-categoria {
+  font-size: 13px;
+  color: #94A3B8;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+
+.badge.urgente { background-color: #FEE2E2; color: #DC2626; }
+.badge.proxima { background-color: #FEF3C7; color: #D97706; }
+.badge.en-tiempo { background-color: #D1FAE5; color: #059669; }
+
+.tarea-fecha-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.fecha-texto {
+  font-size: 13px;
+  font-weight: 600;
+  color: #334155;
+}
+
+.vencimiento {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vencimiento.urgente { color: #DC2626; }
+.vencimiento.proxima { color: #D97706; }
+.vencimiento.en-tiempo { color: #059669; }
+
+.btn-opciones {
+  background: none;
+  border: none;
+  color: #CBD5E1;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-opciones:hover {
+  color: #DC2626;
+}
+
+/* ESTILOS DE LA VENTANA MODAL */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(15, 23, 42, 0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-overlay.oculto {
+  display: none;
+}
+
+.modal-contenido {
+  background-color: #FFFFFF;
+  width: 90%;
+  max-width: 440px;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.modal-encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-encabezado h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #0F172A;
+}
+
+.btn-cerrar {
+  background: none;
+  border: none;
+  font-size: 22px;
+  color: #94A3B8;
+  cursor: pointer;
+}
+
+.form-tarea {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.campo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.campo-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.campo-form input,
+.campo-form select {
+  padding: 10px 12px;
+  border: 1px solid #CBD5E1;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+}
+
+.campo-form input:focus,
+.campo-form select:focus {
+  border-color: #0F172A;
+}
+
+.modal-acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.btn-secundario {
+  background: none;
+  border: 1px solid #CBD5E1;
+  padding: 10px 18px;
+  border-radius: 20px;
+  color: #64748B;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-secundario:hover {
+  background-color: #F8FAFC;
 }
