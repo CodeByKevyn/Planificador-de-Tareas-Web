@@ -14,16 +14,17 @@ Una aplicación web moderna e intuitiva para la gestión y planificación de tar
 | :--- | :--- |
 | 🎨 **Diseño en Figma** | [Ver Wireframe & UI en Figma](https://www.figma.com/design/hSpQJnKEF9LNRNS3zaSRVl/Planificador-de-Tareas-Web?node-id=0-1&t=OHQs8L8TYVl5BJAt-1) |
 | 📋 **Gestión en Trello** | [Ver Tablero de Sprints en Trello](https://trello.com/invite/b/6abd3a4efa53609caa771404/ATTIbb22409e99429d7c7bcc8b0f06ead3e1FF0CE23C/mi-tablero-de-trello) |
-| 🌐 **Sitio Web (Demo)** | [Ver Pagina] (https://codebykevyn.github.io/Planificador-de-Tareas-Web/)
+| 🌐 **Sitio Web (Demo)** | [Ver Página en GitHub Pages](https://codebykevyn.github.io/Planificador-de-Tareas-Web/) |
+
 ---
 
 ## 💡 Lógica del Sistema Semáforo
 
 La aplicación evalúa automáticamente las fechas de vencimiento y el estado de cada tarea para clasificarlas según su urgencia:
 
-* 🔴 **Rojo (Crítico / Urgente):** Tareas vencidas o que deben entregarse en menos de **24 horas**.
-* 🟡 **Amarillo (En Proceso):** Tareas planificadas para los próximos **2 a 5 días**.
-* 🟢 **Verde (Próximas / Completadas):** Tareas con más de **5 días de plazo** o marcadas como finalizadas.
+- 🔴 **Rojo (Crítico / Urgente):** Tareas vencidas o que deben entregarse en menos de **24 horas**.
+- 🟡 **Amarillo (En Proceso):** Tareas planificadas para los próximos **2 a 5 días**.
+- 🟢 **Verde (Próximas / Completadas):** Tareas con más de **5 días de plazo** o marcadas como finalizadas.
 
 ---
 
@@ -31,7 +32,7 @@ La aplicación evalúa automáticamente las fechas de vencimiento y el estado de
 
 - 📝 **Gestión CRUD Completa:** Crea, lee, edita, marca como completada y elimina tareas de forma sencilla.
 - 🚥 **Widget Semáforo en Tiempo Real:** Indicador dinámico en el encabezado que cuenta cuántas tareas activas hay por cada nivel de urgencia.
-- 🎯 **Filtros Rápido de Tareas:** Filtra la vista principal para concentrarte únicamente en las tareas Rojas, Amarillas o Verdes.
+- 🎯 **Filtros Rápidos de Tareas:** Filtra la vista principal para concentrarte únicamente en las tareas Rojas, Amarillas o Verdes.
 - 📅 **Vista de Calendario Integrado:** Visualiza el mes actual con identificadores de color en cada día según tus tareas pendientes.
 - 💾 **Persistencia de Datos:** Uso de `LocalStorage` del navegador para conservar tus tareas al cerrar o recargar la página.
 - 📱 **Diseño Responsive:** Adaptado para una navegación fluida en computadoras, tablets y celulares.
@@ -44,6 +45,3 @@ La aplicación evalúa automáticamente las fechas de vencimiento y el estado de
 - **CSS3:** Estilos modernos (Flexbox, CSS Grid, Variables CSS, Efectos *Glow/Neon*).
 - **JavaScript (ES6+):** Lógica del semáforo, manipulación del DOM, filtros y eventos.
 - **LocalStorage API:** Almacenamiento local del usuario.
-
----
-
