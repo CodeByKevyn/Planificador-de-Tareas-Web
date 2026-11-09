@@ -98,9 +98,20 @@
         </div>
       </div>
 
-      <!-- CONTENEDOR DINÁMICO DE TAREAS -->
       <div id="lista-tareas" class="tarjeta-lista-tareas">
-        <p class="mensaje-vacio">No hay tareas creadas aún. ¡Haz clic en "+ Añadir tarea" para comenzar!</p>
+        <div class="card task-card p-3 mb-3 border">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <h5 class="task-title mb-1">prueba</h5>
+              <p class="mb-1 text-muted">prueba</p>
+              <span class="badge bg-warning text-dark">Urgente</span>
+            </div>
+            <!-- BOTÓN DE COMPLETADO -->
+            <button class="btn btn-outline-success btn-completar ms-3">
+              Marcar como completada
+            </button>
+          </div>
+        </div>
       </div>
 
     </section>
@@ -155,8 +166,9 @@
       </form>
     </div>
   </div>
-
   <!-- JavaScript -->
   <script src="./js/app.js"></script>
+  <script src="js/taskManager.js"></script>
+  <script src="js/index.js"></script>
 </body>
 </html>
