@@ -1,101 +1,38 @@
-// Arreglo global de tareas
+// Arreglo visual para pintar tarjetas, filtrar y calcular estadísticas
 let tareas = [];
 let filtroActual = 'todas';
 
-// Referencias a elementos del DOM
+// Referencias visuales del DOM
 const modal = document.getElementById('modal-tarea');
 const btnAbrirModal = document.getElementById('btn-abrir-modal');
 const btnCerrarModal = document.getElementById('btn-cerrar-modal');
 const btnCancelar = document.getElementById('btn-cancelar');
-const formTarea = document.getElementById('formulario-tarea');
-const alertError = document.getElementById('alert-error');
 const listaTareas = document.getElementById('lista-tareas');
 const inputBuscador = document.getElementById('input-buscador');
 const botonesFiltro = document.querySelectorAll('.btn-filtro');
 
-
-//  FUNCIÓN DE VALIDACIÓN 
-
-function validFormFieldInput(data) {
-  // Comprobar los datos por consola
-  console.log("name: " + data.name);
-  console.log("description: " + data.description);
-  console.log("dueDate: " + data.dueDate);
-  console.log("status: " + data.status);
-
-  // Nombre no vacío
-  if (!data.name || data.name.trim() === '') {
-    return false;
-  }
-
-  // Descripción no vacía
-  if (!data.description || data.description.trim() === '') {
-    return false;
-  }
-
-  //  Fecha de entrega presente
-  if (!data.dueDate || data.dueDate.trim() === '') {
-    return false;
-  }
-
-  // Estado seleccionado
-  if (!data.status || data.status.trim() === '') {
-    return false;
-  }
-
-  return true;
-}
-
-
-// CONTROL DEL MODAL Y EVENTOS DE FORMULARIO
-
-
+// ==========================================
+// 1. CONTROL DEL MODAL
+// ==========================================
 btnAbrirModal.addEventListener('click', function() {
   modal.classList.remove('oculto');
-  alertError.classList.add('d-none'); // Ocultar alerta previa al abrir
+  document.getElementById('alert-error').classList.add('d-none');
 });
 
 function cerrarModal() {
   modal.classList.add('oculto');
-  formTarea.reset();
-  alertError.classList.add('d-none');
+  document.getElementById('formulario-tarea').reset();
+  document.getElementById('alert-error').classList.add('d-none');
 }
 
 btnCerrarModal.addEventListener('click', cerrarModal);
 btnCancelar.addEventListener('click', cerrarModal);
 
-// ENVIAR Y VALIDAR FORMULARIO
-formTarea.addEventListener('submit', function(evento) {
-  evento.preventDefault();
-
-  // Capturar valores mediante selectors
-  const nameInput = document.querySelector('#newTaskNameInput').value;
-  const descriptionInput = document.querySelector('#newTaskDescriptionInput').value;
-  const dueDateInput = document.querySelector('#newTaskDueDateInput').value;
-  const statusInput = document.querySelector('#newTaskStatusInput').value;
-
-  // Empaquetar objeto de datos para la función de validación
-  const formData = {
-    name: nameInput,
-    description: descriptionInput,
-    dueDate: dueDateInput,
-    status: statusInput
-  };
-
-  // Ejecutar validación
-  const esValido = validFormFieldInput(formData);
-
-  if (!esValido) {
-    // Formulario inválido o incompleto -> Mostrar alerta
-    alertError.classList.remove('d-none');
-    return;
-  }
-
-  //  Formulario válido -> Ocultar alerta y procesar tarea
-  alertError.classList.add('d-none');
-
-  // Formatear fecha para la lista
-  const fechaObj = new Date(dueDateInput);
+// ==========================================
+// 2. RECIBIR TAREA DESDE INDEX.JS Y DIBUJARLA
+// ==========================================
+function agregarTareaVisual(name, description, dueDate, status) {
+  const fechaObj = new Date(dueDate);
   const fechaFormateada = fechaObj.toLocaleString('es-ES', { 
     day: 'numeric', 
     month: 'short', 
@@ -103,12 +40,11 @@ formTarea.addEventListener('submit', function(evento) {
     minute: '2-digit' 
   });
 
-  // Crear objeto tarea
   const nuevaTarea = {
     id: Date.now(),
-    titulo: nameInput,
-    descripcion: descriptionInput,
-    prioridad: statusInput,
+    titulo: name,
+    descripcion: description,
+    prioridad: status,
     fechaTexto: fechaFormateada,
     completada: false
   };
@@ -116,11 +52,11 @@ formTarea.addEventListener('submit', function(evento) {
   tareas.push(nuevaTarea);
   cerrarModal();
   renderizarTareas();
-});
+}
 
-
-// FILTROS Y BÚSQUEDA
-
+// ==========================================
+// 3. FILTROS, BÚSQUEDA Y ACCIONES
+// ==========================================
 botonesFiltro.forEach(function(boton) {
   boton.addEventListener('click', function() {
     botonesFiltro.forEach(function(b) { b.classList.remove('activo'); });
@@ -149,9 +85,9 @@ function eliminarTarea(idTarea) {
   renderizarTareas();
 }
 
-// -------------------------------------------------------------
-// RENDERIZAR TAREAS EN PANTALLA
-// -------------------------------------------------------------
+// ==========================================
+// 4. RENDERIZAR TARJETAS Y ESTADÍSTICAS
+// ==========================================
 function renderizarTareas() {
   const busqueda = inputBuscador.value.toLowerCase();
 
