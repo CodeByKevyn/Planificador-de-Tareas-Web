@@ -248,19 +248,28 @@
   opacity: 0.6;
 }
 
-.tarea-checkbox input[type="checkbox"] {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
+.btn-completar {
+  width: 22px;
+  height: 22px;
   border: 2px solid #CBD5E1;
-  appearance: none;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
   cursor: pointer;
-  outline: none;
+  display: grid;
+  place-items: center;
 }
 
-.tarea-checkbox input[type="checkbox"]:checked {
-  background-color: #0F172A;
-  border-color: #0F172A;
+.btn-completar:hover {
+  border-color: #059669;
+}
+
+.btn-completar.activo {
+  background-color: #059669;
+  border-color: #059669;
 }
 
 .tarea-info {

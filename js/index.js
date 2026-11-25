@@ -1,27 +1,20 @@
-// 1. Creamos la instancia de TaskManager
-const taskManager = new TaskManager();
-console.log(taskManager.tasks);
-
-// 2. Seleccionamos el formulario y la alerta
+// 1. Seleccionamos el formulario y la alerta
 const formTarea = document.querySelector('#formulario-tarea');
 const alertError = document.querySelector('#alert-error');
 
-// 3. Función de validación
+// 2. Función de validación
 function validFormFieldInput(data) {
-  console.log("name: " + data.name);
-  console.log("description: " + data.description);
-  console.log("dueDate: " + data.dueDate);
-  console.log("status: " + data.status);
-
   if (!data.name || data.name.trim() === '') return false;
   if (!data.description || data.description.trim() === '') return false;
   if (!data.dueDate || data.dueDate.trim() === '') return false;
   if (!data.status || data.status.trim() === '') return false;
+  if (Number.isNaN(new Date(data.dueDate).getTime())) return false;
+  if (!['urgente', 'proxima', 'en-tiempo'].includes(data.status)) return false;
 
   return true;
 }
 
-// 4. Escuchamos el envío del formulario
+// 3. Escuchamos el envío del formulario
 formTarea.addEventListener('submit', function(evento) {
   evento.preventDefault();
 
@@ -38,6 +31,8 @@ formTarea.addEventListener('submit', function(evento) {
     status: statusInput
   };
 
+  console.log('Datos enviados para crear tarea:', formData);
+
   // Validar
   if (!validFormFieldInput(formData)) {
     alertError.classList.remove('d-none');
@@ -47,11 +42,7 @@ formTarea.addEventListener('submit', function(evento) {
   // Ocultar alerta de error
   alertError.classList.add('d-none');
 
-  // Guardar en TaskManager (Tarea 5)
-  taskManager.addTask(nameInput, descriptionInput, dueDateInput, statusInput);
-  console.log(taskManager.tasks);
-
-  // Avisarle a app.js que dibuje la tarjeta en pantalla y cierre el modal
+  // Avisarle a app.js que guarde la tarea, dibuje la tarjeta y cierre el modal
   agregarTareaVisual(nameInput, descriptionInput, dueDateInput, statusInput);
 
   // Limpiar el formulario
