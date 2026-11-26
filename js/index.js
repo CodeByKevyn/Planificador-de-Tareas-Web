@@ -42,28 +42,13 @@ formTarea.addEventListener('submit', function(evento) {
   // Ocultar alerta de error
   alertError.classList.add('d-none');
 
-  // Avisarle a app.js que guarde la tarea, dibuje la tarjeta y cierre el modal
-  agregarTareaVisual(nameInput, descriptionInput, dueDateInput, statusInput);
+  // Crear una tarea nueva o guardar los cambios de la tarea seleccionada
+  if (tareaEditandoId !== null) {
+    guardarEdicionTarea(nameInput, descriptionInput, dueDateInput, statusInput);
+  } else {
+    agregarTareaVisual(nameInput, descriptionInput, dueDateInput, statusInput);
+  }
 
   // Limpiar el formulario
   formTarea.reset();
-});
-
-// Un único EventListener delega el clic de todos los botones "Mark As Done".
-const tasksList = document.querySelector('#tasksList');
-tasksList.addEventListener('click', (event) => {
-  if (!event.target.classList.contains('done-button')) return;
-
-  const parentTask = event.target.closest('[data-task-id]');
-  if (!parentTask) return;
-
-  const taskId = Number(parentTask.dataset.taskId);
-  const task = taskManager.getTaskById(taskId);
-  if (!task) return;
-
-  task.status = 'DONE';
-  task.completada = true;
-  tareas = taskManager.tasks.slice();
-  guardarTareas();
-  taskManager.render();
 });

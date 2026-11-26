@@ -13,6 +13,7 @@ class TaskManager {
       descripcion: description,
       prioridad: status,
       fechaTexto: dueDate,
+      dueDate: dueDate,
       completada: false,
       status: 'PORHACER'
     });
@@ -55,8 +56,8 @@ class TaskManager {
           <span class="fecha-texto">${fechaTexto}</span>
           <span class="vencimiento ${prioridad}">${completada ? 'DONE' : 'Pendiente'}</span>
         </div>
-        <button type="button" class="done-button btn btn-success"
-          ${completada ? 'disabled' : ''}>Mark As Done</button>
+        <button type="button" class="btn-editar" aria-label="Editar tarea"
+          title="Editar tarea" onclick="abrirEditarTarea(${id})">Editar</button>
         <button type="button" class="btn-opciones" aria-label="Eliminar tarea" title="Eliminar tarea"
           onclick="eliminarTarea(${id})">🗑️</button>
       </div>

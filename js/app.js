@@ -2,6 +2,7 @@
 const CLAVE_TAREAS = 'semaforito-tareas';
 let tareas = cargarTareas();
 let filtroActual = 'todas';
+let tareaEditandoId = null;
 const taskManager = new TaskManager(
   tareas.length > 0 ? Math.max.apply(null, tareas.map(function(tarea) { return tarea.id; })) : 0
 );
@@ -12,6 +13,7 @@ taskManager.tasks = tareas.map(function(tarea) {
     descripcion: tarea.descripcion,
     prioridad: tarea.prioridad,
     fechaTexto: tarea.fechaTexto,
+    dueDate: typeof tarea.dueDate === 'string' ? tarea.dueDate : '',
     completada: tarea.completada,
     status: tarea.completada ? 'DONE' : 'PORHACER'
   };
@@ -76,14 +78,20 @@ function escaparHTML(valor) {
 // 1. CONTROL DEL MODAL
 // ==========================================
 btnAbrirModal.addEventListener('click', function() {
+  tareaEditandoId = null;
+  document.querySelector('#modal-tarea h3').textContent = 'Nueva Tarea';
+  document.querySelector('#btn-submit-tarea').textContent = 'Guardar Tarea';
   modal.classList.remove('oculto');
   document.getElementById('alert-error').classList.add('d-none');
 });
 
 function cerrarModal() {
+  tareaEditandoId = null;
   modal.classList.add('oculto');
   document.getElementById('formulario-tarea').reset();
   document.getElementById('alert-error').classList.add('d-none');
+  document.querySelector('#modal-tarea h3').textContent = 'Nueva Tarea';
+  document.querySelector('#btn-submit-tarea').textContent = 'Guardar Tarea';
 }
 
 btnCerrarModal.addEventListener('click', cerrarModal);
@@ -105,11 +113,55 @@ function agregarTareaVisual(name, description, dueDate, status) {
   });
   taskManager.addTask(name, description, fechaFormateada, status);
   const nuevaTarea = taskManager.tasks[taskManager.tasks.length - 1];
+  nuevaTarea.dueDate = dueDate;
   tareas = taskManager.tasks.slice();
   console.log('Tarea creada:', nuevaTarea);
   guardarTareas();
   cerrarModal();
   renderizarTareas();
+}
+
+function abrirEditarTarea(idTarea) {
+  const tarea = taskManager.getTaskById(idTarea);
+  if (!tarea) return;
+
+  tareaEditandoId = idTarea;
+  document.querySelector('#modal-tarea h3').textContent = 'Editar Tarea';
+  document.querySelector('#btn-submit-tarea').textContent = 'Guardar cambios';
+  document.querySelector('#newTaskNameInput').value = tarea.titulo;
+  document.querySelector('#newTaskDescriptionInput').value = tarea.descripcion;
+  document.querySelector('#newTaskStatusInput').value = tarea.prioridad;
+
+  const campoFecha = document.querySelector('#newTaskDueDateInput');
+  campoFecha.value = tarea.dueDate || '';
+  modal.classList.remove('oculto');
+  document.getElementById('alert-error').classList.add('d-none');
+}
+
+function guardarEdicionTarea(name, description, dueDate, status) {
+  const tarea = taskManager.getTaskById(tareaEditandoId);
+  if (!tarea) return;
+
+  const fechaObj = new Date(dueDate);
+  if (Number.isNaN(fechaObj.getTime())) {
+    throw new Error('La fecha de entrega no es válida.');
+  }
+
+  tarea.titulo = name;
+  tarea.descripcion = description;
+  tarea.prioridad = status;
+  tarea.dueDate = dueDate;
+  tarea.fechaTexto = fechaObj.toLocaleString('es-ES', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  tareas = taskManager.tasks.slice();
+  guardarTareas();
+  cerrarModal();
+  taskManager.render();
 }
 
 // ==========================================

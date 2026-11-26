@@ -336,18 +336,21 @@
 .vencimiento.proxima { color: #D97706; }
 .vencimiento.en-tiempo { color: #059669; }
 
-.done-button {
+.btn-editar {
   flex-shrink: 0;
   padding: 7px 10px;
-  border: none;
+  border: 1px solid #CBD5E1;
   border-radius: 8px;
+  background: #FFFFFF;
+  color: #334155;
   font-size: 12px;
   font-weight: 700;
+  cursor: pointer;
 }
 
-.done-button:disabled {
-  cursor: default;
-  opacity: 0.55;
+.btn-editar:hover {
+  background: #F8FAFC;
+  border-color: #94A3B8;
 }
 
 .btn-opciones {
