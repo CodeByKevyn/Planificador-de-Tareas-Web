@@ -2,13 +2,27 @@
 const CLAVE_TAREAS = 'semaforito-tareas';
 let tareas = cargarTareas();
 let filtroActual = 'todas';
+const taskManager = new TaskManager(
+  tareas.length > 0 ? Math.max.apply(null, tareas.map(function(tarea) { return tarea.id; })) : 0
+);
+taskManager.tasks = tareas.map(function(tarea) {
+  return {
+    id: tarea.id,
+    titulo: tarea.titulo,
+    descripcion: tarea.descripcion,
+    prioridad: tarea.prioridad,
+    fechaTexto: tarea.fechaTexto,
+    completada: tarea.completada,
+    status: tarea.completada ? 'DONE' : 'PORHACER'
+  };
+});
 
 // Referencias visuales del DOM
 const modal = document.getElementById('modal-tarea');
 const btnAbrirModal = document.getElementById('btn-abrir-modal');
 const btnCerrarModal = document.getElementById('btn-cerrar-modal');
 const btnCancelar = document.getElementById('btn-cancelar');
-const listaTareas = document.getElementById('lista-tareas');
+const listaTareas = document.getElementById('tasksList');
 const inputBuscador = document.getElementById('input-buscador');
 const botonesFiltro = document.querySelectorAll('.btn-filtro');
 
@@ -89,20 +103,9 @@ function agregarTareaVisual(name, description, dueDate, status) {
     hour: '2-digit', 
     minute: '2-digit' 
   });
-  const siguienteId = tareas.reduce(function(maximo, tarea) {
-    return Math.max(maximo, tarea.id);
-  }, Date.now() - 1) + 1;
-
-  const nuevaTarea = {
-    id: siguienteId,
-    titulo: name,
-    descripcion: description,
-    prioridad: status,
-    fechaTexto: fechaFormateada,
-    completada: false
-  };
-
-  tareas.push(nuevaTarea);
+  taskManager.addTask(name, description, fechaFormateada, status);
+  const nuevaTarea = taskManager.tasks[taskManager.tasks.length - 1];
+  tareas = taskManager.tasks.slice();
   console.log('Tarea creada:', nuevaTarea);
   guardarTareas();
   cerrarModal();
@@ -126,18 +129,19 @@ inputBuscador.addEventListener('input', function() {
 });
 
 function alternarCompletada(idTarea) {
-  for (let i = 0; i < tareas.length; i++) {
-    if (tareas[i].id === idTarea) {
-      tareas[i].completada = !tareas[i].completada;
-      guardarTareas();
-      break;
-    }
+  const tarea = taskManager.getTaskById(idTarea);
+  if (tarea) {
+    tarea.completada = !tarea.completada;
+    tarea.status = tarea.completada ? 'DONE' : 'PORHACER';
+    tareas = taskManager.tasks.slice();
+    guardarTareas();
   }
-  renderizarTareas();
+  taskManager.render();
 }
 
 function eliminarTarea(idTarea) {
-  tareas = tareas.filter(function(t) { return t.id !== idTarea; });
+  taskManager.tasks = taskManager.tasks.filter(function(t) { return t.id !== idTarea; });
+  tareas = taskManager.tasks.slice();
   guardarTareas();
   renderizarTareas();
 }
@@ -148,7 +152,8 @@ function eliminarTarea(idTarea) {
 function renderizarTareas() {
   const busqueda = inputBuscador.value.toLowerCase();
 
-  const tareasFiltradas = tareas.filter(function(tarea) {
+  tareas = taskManager.tasks.slice();
+  const tareasFiltradas = taskManager.tasks.filter(function(tarea) {
     let coincideFiltro = true;
     if (filtroActual === 'urgente') coincideFiltro = (tarea.prioridad === 'urgente');
     if (filtroActual === 'proxima') coincideFiltro = (tarea.prioridad === 'proxima');
@@ -166,36 +171,15 @@ function renderizarTareas() {
   } else {
     let contenidoHTML = '';
     tareasFiltradas.forEach(function(tarea) {
-      const claseCompletada = tarea.completada ? 'completada' : '';
-      const claseTachado = tarea.completada ? 'tachado' : '';
-      const textoEstado = escaparHTML(tarea.prioridad.replace('-', ' '));
-      const titulo = escaparHTML(tarea.titulo);
-      const descripcion = escaparHTML(tarea.descripcion);
-      const fechaTexto = escaparHTML(tarea.fechaTexto);
-
-      contenidoHTML += `
-        <div class="tarea-item ${claseCompletada}">
-          <div class="tarea-checkbox">
-            <button type="button" class="btn-completar ${tarea.completada ? 'activo' : ''}"
-              aria-label="${tarea.completada ? 'Marcar como pendiente' : 'Marcar como completada'}"
-              title="${tarea.completada ? 'Marcar como pendiente' : 'Marcar como completada'}"
-              onclick="alternarCompletada(${tarea.id})">${tarea.completada ? '✓' : ''}</button>
-          </div>
-          <div class="tarea-info">
-            <div class="tarea-titulo-fila">
-              <span class="tarea-titulo ${claseTachado}">${titulo}</span>
-              <span class="badge ${tarea.prioridad}">${textoEstado}</span>
-            </div>
-            <span class="tarea-categoria">${descripcion}</span>
-          </div>
-          <div class="tarea-fecha-box">
-            <span class="fecha-texto">${fechaTexto}</span>
-            <span class="vencimiento ${tarea.prioridad}">${tarea.completada ? 'Completada' : 'Pendiente'}</span>
-          </div>
-          <button type="button" class="btn-opciones" aria-label="Eliminar tarea" title="Eliminar tarea"
-            onclick="eliminarTarea(${tarea.id})">🗑️</button>
-        </div>
-      `;
+      contenidoHTML += taskManager.createTaskHtml(
+        tarea.id,
+        tarea.titulo,
+        tarea.descripcion,
+        tarea.fechaTexto,
+        tarea.status,
+        tarea.completada,
+        tarea.prioridad
+      );
     });
     listaTareas.innerHTML = contenidoHTML;
   }
